@@ -1,4 +1,3 @@
-import React from 'react';
 import { useStore } from '../store/editorStore';
 import { cn } from '../utils/cn';
 
@@ -14,9 +13,9 @@ export const HeadingBlock = ({ id, content, level = 2, isEditing, align = 'left'
   const updateBlock = useStore((state) => state.updateBlock);
   const saveHistory = useStore((state) => state.saveHistory);
 
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4';
 
-  const handleChange = (e: React.FormEvent<HTMLHeadingElement>) => {
+  const handleChange = (e: any) => {
     updateBlock(id, e.currentTarget.innerText);
   };
 

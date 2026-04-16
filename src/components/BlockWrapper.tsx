@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { 
@@ -7,11 +7,9 @@ import {
   Copy, 
   Plus, 
   Check, 
-  Scale,
   AlignLeft,
   AlignCenter,
-  AlignRight,
-  Minus
+  AlignRight
 } from 'lucide-react';
 import { useStore } from '../store/editorStore';
 import type { Block } from '../types';
@@ -22,7 +20,7 @@ import { MarkdownBlock } from '../blocks/MarkdownBlock';
 import { ImageBlock } from '../blocks/ImageBlock';
 import { ButtonBlock } from '../blocks/ButtonBlock';
 import { DividerBlock } from '../blocks/DividerBlock';
-import { motion, AnimatePresence } from 'framer-motion';
+
 
 interface BlockWrapperProps {
   block: Block;

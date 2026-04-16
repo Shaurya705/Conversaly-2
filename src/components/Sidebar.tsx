@@ -1,11 +1,10 @@
-import React from 'react';
+import { type ElementType } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import type { BlockType } from '../types';
 import { 
   Type, 
   Image as ImageIcon, 
   Heading1, 
-  FileText, 
   FileText, 
   GripVertical,
   ExternalLink,
@@ -16,7 +15,7 @@ import { cn } from '../utils/cn';
 interface SidebarItemProps {
   type: BlockType;
   label: string;
-  icon: React.ElementType;
+  icon: ElementType;
 }
 
 const DraggableItem = ({ type, label, icon: Icon }: SidebarItemProps) => {

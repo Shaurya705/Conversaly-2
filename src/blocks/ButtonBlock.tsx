@@ -1,4 +1,3 @@
-import React from 'react';
 import { useStore } from '../store/editorStore';
 import { cn } from '../utils/cn';
 
@@ -39,24 +38,34 @@ export const ButtonBlock = ({
     right: "justify-end",
   };
 
+  const buttonContent = (
+    <div
+      className={cn(
+        "inline-flex items-center gap-2 px-6 py-3 font-semibold rounded-xl transition-all shadow-md active:scale-95",
+        variants[variant]
+      )}
+    >
+      <span
+        contentEditable={isEditing}
+        suppressContentEditableWarning
+        onInput={handleEdit}
+        onBlur={() => saveHistory()}
+        className="outline-none focus:ring-0 min-w-[20px]"
+      >
+        {content}
+      </span>
+    </div>
+  );
+
   return (
     <div className={cn("flex w-full py-4", alignments[align])}>
-      <div
-        className={cn(
-          "inline-flex items-center gap-2 px-6 py-3 font-semibold rounded-xl transition-all shadow-md active:scale-95",
-          variants[variant]
-        )}
-      >
-        <span
-          contentEditable={isEditing}
-          suppressContentEditableWarning
-          onInput={handleEdit}
-          onBlur={() => saveHistory()}
-          className="outline-none focus:ring-0 min-w-[20px]"
-        >
-          {content}
-        </span>
-      </div>
+      {isEditing ? (
+        buttonContent
+      ) : (
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {buttonContent}
+        </a>
+      )}
     </div>
   );
 };

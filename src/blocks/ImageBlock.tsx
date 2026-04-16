@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useStore } from '../store/editorStore';
 import { cn } from '../utils/cn';
 

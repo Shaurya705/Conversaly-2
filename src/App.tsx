@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   DndContext, 
   DragOverlay, 
@@ -11,8 +11,7 @@ import {
   type DragStartEvent
 } from '@dnd-kit/core';
 import { 
-  sortableKeyboardCoordinates, 
-  arrayMove 
+  sortableKeyboardCoordinates 
 } from '@dnd-kit/sortable';
 import { Sidebar } from './components/Sidebar';
 import { Canvas } from './components/Canvas';
@@ -20,7 +19,6 @@ import { useStore } from './store/editorStore';
 import { 
   Undo2, 
   Redo2, 
-  Trash2, 
   Save, 
   Moon, 
   Sun,
