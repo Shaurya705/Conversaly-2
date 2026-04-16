@@ -1,13 +1,15 @@
 import React from 'react';
 import { useStore } from '../store/editorStore';
+import { cn } from '../utils/cn';
 
 interface Props {
   id: string;
   content: string;
   isEditing?: boolean;
+  align?: 'left' | 'center' | 'right';
 }
 
-export const ImageBlock = ({ id, content, isEditing }: Props) => {
+export const ImageBlock = ({ id, content, isEditing, align = 'center' }: Props) => {
   const updateBlock = useStore((state) => state.updateBlock);
   const saveHistory = useStore((state) => state.saveHistory);
 
@@ -40,14 +42,25 @@ export const ImageBlock = ({ id, content, isEditing }: Props) => {
     );
   }
 
+  const alignments = {
+    left: "justify-start",
+    center: "justify-center",
+    right: "justify-end",
+  };
+
   return (
-    <div className="relative group overflow-hidden rounded-2xl bg-muted/10">
-      <img
-        src={content || 'https://via.placeholder.com/800x400?text=No+Image+Provided'}
-        className="w-full h-auto max-h-[600px] object-cover rounded-xl transition-all duration-700"
-        alt="Content"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+    <div className={cn("flex w-full py-4", alignments[align])}>
+      <div className={cn(
+        "relative group overflow-hidden rounded-2xl bg-muted/10 transition-all duration-300",
+        align === 'center' ? "max-w-full" : "max-w-[80%]"
+      )}>
+        <img
+          src={content || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1000'}
+          className="w-full h-auto max-h-[600px] object-cover rounded-xl transition-all duration-700"
+          alt="Content"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
     </div>
   );
 };

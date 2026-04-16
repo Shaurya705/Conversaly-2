@@ -57,8 +57,15 @@ export const useStore = create<EditorStore>()(
         const newBlock: Block = {
           id: nanoid(),
           type,
-          content: type === 'IMAGE' ? 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1000' : '',
-          config: type === 'HEADING' ? { level: 2 } : {},
+          content: 
+            type === 'IMAGE' ? 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1000' : 
+            type === 'BUTTON' ? 'Click Me' : 
+            '',
+          config: 
+            type === 'HEADING' ? { level: 2, align: 'left' } : 
+            type === 'BUTTON' ? { variant: 'primary', align: 'center', href: '#' } :
+            type === 'DIVIDER' ? { padding: 'medium' } :
+            { align: 'left' },
         };
 
         const currentBlocks = [...get().blocks];

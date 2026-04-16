@@ -6,7 +6,10 @@ import {
   Image as ImageIcon, 
   Heading1, 
   FileText, 
-  GripVertical 
+  FileText, 
+  GripVertical,
+  ExternalLink,
+  Minus
 } from 'lucide-react';
 import { cn } from '../utils/cn';
 
@@ -47,6 +50,8 @@ export const Sidebar = () => {
     { type: 'RICH_TEXT', label: 'Rich Text', icon: Type },
     { type: 'MARKDOWN', label: 'Markdown', icon: FileText },
     { type: 'IMAGE', label: 'Image', icon: ImageIcon },
+    { type: 'BUTTON', label: 'Button', icon: ExternalLink },
+    { type: 'DIVIDER', label: 'Divider', icon: Minus },
   ];
 
   return (

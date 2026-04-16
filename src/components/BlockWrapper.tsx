@@ -7,8 +7,11 @@ import {
   Copy, 
   Plus, 
   Check, 
-  Settings2,
-  ChevronDown
+  Scale,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Minus
 } from 'lucide-react';
 import { useStore } from '../store/editorStore';
 import type { Block } from '../types';
@@ -17,6 +20,8 @@ import { HeadingBlock } from '../blocks/HeadingBlock';
 import { RichTextBlock } from '../blocks/RichTextBlock';
 import { MarkdownBlock } from '../blocks/MarkdownBlock';
 import { ImageBlock } from '../blocks/ImageBlock';
+import { ButtonBlock } from '../blocks/ButtonBlock';
+import { DividerBlock } from '../blocks/DividerBlock';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface BlockWrapperProps {
@@ -69,6 +74,10 @@ export const BlockWrapper = ({ block }: BlockWrapperProps) => {
         return <MarkdownBlock {...props} />;
       case 'IMAGE':
         return <ImageBlock {...props} />;
+      case 'BUTTON':
+        return <ButtonBlock {...props} />;
+      case 'DIVIDER':
+        return <DividerBlock {...props} />;
       default:
         return null;
     }
@@ -109,75 +118,161 @@ export const BlockWrapper = ({ block }: BlockWrapperProps) => {
         {/* Block Controls - Only visible when selected or hovering */}
         {!isPreviewMode && (
           <div className={cn(
-            "absolute right-2 top-2 flex items-center gap-1 opacity-0 transition-opacity duration-200 z-30",
+            "absolute right-2 top-2 flex flex-col items-end gap-1 opacity-0 transition-opacity duration-200 z-30",
             (isSelected || !isDragging) && "group-hover:opacity-100",
             isSelected && "opacity-100"
           )}>
-            {/* Block Specific Config - e.g. Heading Level */}
-            {block.type === 'HEADING' && isSelected && (
-              <div className="flex bg-card border border-border rounded-lg p-1 mr-2 shadow-sm animate-in fade-in slide-in-from-right-2">
-              {[1, 2, 3, 4].map((level) => (
-                <button
-                  key={level}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    updateBlock(block.id, block.content, { level });
-                  }}
-                  className={cn(
-                    "w-7 h-7 flex items-center justify-center text-xs font-bold rounded-md transition-colors",
-                    block.config?.level === level ? "bg-primary text-primary-foreground" : "hover:bg-muted"
-                  )}
-                >
-                  H{level}
-                </button>
-              ))}
-            </div>
-          )}
+            <div className="flex items-center gap-1 animate-in fade-in slide-in-from-right-2">
+              {/* Alignment Controls */}
+              {['HEADING', 'IMAGE', 'BUTTON'].includes(block.type) && isSelected && (
+                <div className="flex bg-card border border-border rounded-lg p-1 mr-1 shadow-sm">
+                  {[
+                    { val: 'left', icon: AlignLeft },
+                    { val: 'center', icon: AlignCenter },
+                    { val: 'right', icon: AlignRight }
+                  ].map(({ val, icon: Icon }) => (
+                    <button
+                      key={val}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateBlock(block.id, block.content, { align: val });
+                      }}
+                      className={cn(
+                        "p-1 rounded-md transition-colors",
+                        block.config?.align === val ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                      )}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                    </button>
+                  ))}
+                </div>
+              )}
 
-          <div className="flex items-center gap-1 bg-card border border-border rounded-lg p-1 shadow-sm">
-            <button
-              {...listeners}
-              {...attributes}
-              className="p-1.5 hover:bg-muted rounded-md cursor-grab active:cursor-grabbing text-muted-foreground transition-colors"
-            >
-              <GripHorizontal className="w-4 h-4" />
-            </button>
-            <div className="w-px h-4 bg-border mx-1" />
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                duplicateBlock(block.id);
-              }}
-              className="p-1.5 hover:bg-muted rounded-md text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Copy className="w-4 h-4" />
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                deleteBlock(block.id);
-              }}
-              className="p-1.5 hover:bg-red-500/10 hover:text-red-500 rounded-md text-muted-foreground transition-colors"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
-            {isSelected && (
-              <>
+              {/* Heading Level */}
+              {block.type === 'HEADING' && isSelected && (
+                <div className="flex bg-card border border-border rounded-lg p-1 mr-1 shadow-sm">
+                  {[1, 2, 3, 4].map((level) => (
+                    <button
+                      key={level}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateBlock(block.id, block.content, { level });
+                      }}
+                      className={cn(
+                        "w-7 h-7 flex items-center justify-center text-xs font-bold rounded-md transition-colors",
+                        block.config?.level === level ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                      )}
+                    >
+                      H{level}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Button Variant */}
+              {block.type === 'BUTTON' && isSelected && (
+                <div className="flex bg-card border border-border rounded-lg p-1 mr-1 shadow-sm">
+                  {['primary', 'secondary', 'outline'].map((variant) => (
+                    <button
+                      key={variant}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateBlock(block.id, block.content, { variant });
+                      }}
+                      className={cn(
+                        "px-2 h-7 text-[10px] font-bold uppercase rounded-md transition-colors",
+                        block.config?.variant === variant ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                      )}
+                    >
+                      {variant.charAt(0)}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Divider Padding */}
+              {block.type === 'DIVIDER' && isSelected && (
+                <div className="flex bg-card border border-border rounded-lg p-1 mr-1 shadow-sm">
+                  {['none', 'small', 'medium', 'large'].map((p) => (
+                    <button
+                      key={p}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateBlock(block.id, block.content, { padding: p });
+                      }}
+                      className={cn(
+                        "px-2 h-7 text-[10px] font-bold uppercase rounded-md transition-colors",
+                        block.config?.padding === p ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+                      )}
+                    >
+                      {p.charAt(0)}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex items-center gap-1 bg-card border border-border rounded-lg p-1 shadow-sm">
+                <button
+                  {...listeners}
+                  {...attributes}
+                  className="p-1.5 hover:bg-muted rounded-md cursor-grab active:cursor-grabbing text-muted-foreground transition-colors"
+                >
+                  <GripHorizontal className="w-4 h-4" />
+                </button>
                 <div className="w-px h-4 bg-border mx-1" />
                 <button
-                   onClick={(e) => {
+                  onClick={(e) => {
                     e.stopPropagation();
-                    setSelectedBlockId(null);
+                    duplicateBlock(block.id);
                   }}
-                  className="p-1.5 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-colors"
+                  className="p-1.5 hover:bg-muted rounded-md text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <Check className="w-4 h-4" />
+                  <Copy className="w-4 h-4" />
                 </button>
-              </>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteBlock(block.id);
+                  }}
+                  className="p-1.5 hover:bg-red-500/10 hover:text-red-500 rounded-md text-muted-foreground transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+                {isSelected && (
+                  <>
+                    <div className="w-px h-4 bg-border mx-1" />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedBlockId(null);
+                      }}
+                      className="p-1.5 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md transition-colors"
+                    >
+                      <Check className="w-4 h-4" />
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Link Edit for Button */}
+            {block.type === 'BUTTON' && isSelected && (
+              <div className="mt-1 bg-card border border-border rounded-lg p-1 shadow-lg animate-in fade-in slide-in-from-top-1">
+                <input 
+                  type="text"
+                  placeholder="Button Link (URL)"
+                  value={block.config?.href || ''}
+                  onChange={(e) => {
+                    e.stopPropagation();
+                    updateBlock(block.id, block.content, { href: e.target.value });
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="bg-transparent border-none outline-none text-xs px-2 py-1 w-48 font-medium"
+                />
+              </div>
             )}
           </div>
-        </div>
-      )}
+        )}
 
         {/* Content Area */}
         <div className={cn(
